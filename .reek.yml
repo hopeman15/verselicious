@@ -1,0 +1,10 @@
+exclude_paths:
+  - spec
+  - vendor
+
+detectors:
+  UncommunicativeVariableName:
+    accept:
+      - f
+  IrresponsibleModule:
+    enabled: false

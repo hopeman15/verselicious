@@ -1,0 +1,49 @@
+name: 'Verselicious'
+description: 'Automate semantic versioning with labels.'
+
+branding:
+  color: 'green'
+  icon: 'tag'
+
+inputs:
+  github-token:
+    description: 'GitHub token for API access. Use a PAT if tag creation needs to trigger downstream workflows.'
+    required: true
+  major-label:
+    description: 'Label name that triggers a major version bump.'
+    required: false
+    default: 'major'
+  minor-label:
+    description: 'Label name that triggers a minor version bump.'
+    required: false
+    default: 'minor'
+  patch-label:
+    description: 'Label name that triggers a patch version bump.'
+    required: false
+    default: 'patch'
+  tag-prefix:
+    description: 'Prefix for version tags (e.g., "v" to produce "v1.0.0").'
+    required: false
+    default: ''
+  target-branch:
+    description: 'Branch to target for the release.'
+    required: false
+    default: 'main'
+  generate-notes:
+    description: 'Whether to auto-generate release notes.'
+    required: false
+    default: 'true'
+
+outputs:
+  new-version:
+    description: 'The new version after bumping (e.g., "1.1.0")'
+  previous-version:
+    description: 'The version before bumping (e.g., "1.0.0")'
+  tag:
+    description: 'The full tag created (e.g., "v1.1.0" if tag-prefix is "v")'
+  release-url:
+    description: 'URL of the created GitHub release'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
