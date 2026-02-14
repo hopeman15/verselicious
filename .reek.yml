@@ -8,3 +8,8 @@ detectors:
       - f
   IrresponsibleModule:
     enabled: false
+  TooManyInstanceVariables:
+    max_instance_variables: 5
+  UtilityFunction:
+    exclude:
+      - 'Verselicious::Runner#build_config'
