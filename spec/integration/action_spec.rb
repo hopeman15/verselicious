@@ -33,7 +33,7 @@ RSpec.describe 'GitHub Action', :integration do
 
     env_flags = default_env.map { |k, v| "-e #{k.shellescape}=#{v.shellescape}" }.join(' ')
 
-    command = "docker run --rm #{env_flags} " \
+    command = "docker run --rm --add-host=host.docker.internal:host-gateway #{env_flags} " \
               "-v #{fixture_path}:/github/event.json:ro " \
               "-v #{workspace}:/github/workspace " \
               "#{image_name} 2>&1"

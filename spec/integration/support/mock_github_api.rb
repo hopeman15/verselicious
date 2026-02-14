@@ -13,8 +13,32 @@ class MockGitHubAPI
   end
 
   def start
-    @server = WEBrick::HTTPServer.new(Port: @port, Logger: WEBrick::Log.new('/dev/null'), AccessLog: [])
+    @server = build_server
+    mount_routes
+    @thread = Thread.new { @server.start }
+  end
 
+  def stop
+    @server&.shutdown
+    @thread&.join(5)
+  end
+
+  def labels=(labels)
+    @labels = labels.map { |name| { name: name } }
+  end
+
+  private
+
+  def build_server
+    WEBrick::HTTPServer.new(
+      Port: @port,
+      BindAddress: '0.0.0.0',
+      Logger: WEBrick::Log.new(File::NULL),
+      AccessLog: []
+    )
+  end
+
+  def mount_routes
     @server.mount_proc('/repos/test-owner/test-repo/commits/abc123/pulls') do |_req, res|
       res['Content-Type'] = 'application/json'
       res.body = JSON.generate([{ number: 1 }])
@@ -32,20 +56,7 @@ class MockGitHubAPI
                                  html_url: 'https://github.com/test-owner/test-repo/releases/tag/mock-release'
                                })
     end
-
-    @thread = Thread.new { @server.start }
   end
-
-  def stop
-    @server&.shutdown
-    @thread&.join(5)
-  end
-
-  def labels=(labels)
-    @labels = labels.map { |name| { name: name } }
-  end
-
-  private
 
   def find_available_port
     server = TCPServer.new('0.0.0.0', 0)

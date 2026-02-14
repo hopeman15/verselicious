@@ -15,17 +15,33 @@ Style/FrozenStringLiteralComment:
 
 Metrics/MethodLength:
   Max: 15
+  Exclude:
+    - "spec/integration/**/*"
 
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
     - "*.gemspec"
 
+Metrics/AbcSize:
+  Exclude:
+    - "spec/integration/**/*"
+
 RSpec/ExampleLength:
   Max: 15
 
 RSpec/MultipleExpectations:
   Max: 3
+  Exclude:
+    - "spec/integration/**/*"
 
 RSpec/NestedGroups:
   Max: 4
+
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/integration/**/*"
+
+RSpec/BeforeAfterAll:
+  Exclude:
+    - "spec/integration/**/*"

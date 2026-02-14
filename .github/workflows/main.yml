@@ -64,7 +64,5 @@ jobs:
         with:
           ruby-version: '3.4'
           bundler-cache: true
-      - name: Enable host.docker.internal
-        run: echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
       - name: Integration Test
         run: make integration
