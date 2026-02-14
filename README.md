@@ -104,7 +104,3 @@ The default `GITHUB_TOKEN` does not trigger other workflows when creating tags. 
   with:
     github-token: ${{ secrets.PAT }}
 ```
-
-## License
-
-[MIT](LICENSE)
