@@ -53,6 +53,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit
+          files: coverage/.resultset.json
 
   integration:
     name: Integration
@@ -72,3 +73,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: integration
+          files: coverage/.resultset.json
