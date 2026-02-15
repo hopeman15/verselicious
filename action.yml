@@ -6,30 +6,30 @@ branding:
   icon: 'tag'
 
 inputs:
-  github-token:
+  github_token:
     description: 'GitHub token for API access. Use a PAT if tag creation needs to trigger downstream workflows.'
     required: true
-  major-label:
+  major_label:
     description: 'Label name that triggers a major version bump.'
     required: false
     default: 'major'
-  minor-label:
+  minor_label:
     description: 'Label name that triggers a minor version bump.'
     required: false
     default: 'minor'
-  patch-label:
+  patch_label:
     description: 'Label name that triggers a patch version bump.'
     required: false
     default: 'patch'
-  tag-prefix:
+  tag_prefix:
     description: 'Prefix for version tags (e.g., "v" to produce "v1.0.0").'
     required: false
     default: ''
-  target-branch:
+  target_branch:
     description: 'Branch to target for the release.'
     required: false
     default: 'main'
-  generate-notes:
+  generate_notes:
     description: 'Whether to auto-generate release notes.'
     required: false
     default: 'true'
