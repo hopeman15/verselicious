@@ -12,7 +12,9 @@ RSpec.describe 'GitHub Action', :integration do
 
   before(:all) do
     project_root = File.expand_path('../..', __dir__)
-    system("docker build --load -t verselicious-integration #{project_root}", out: File::NULL, err: File::NULL)
+    unless system("docker build --load -t verselicious-integration #{project_root}", out: File::NULL, err: File::NULL)
+      raise 'Docker image build failed'
+    end
   end
 
   def run_action(fixture:, env: {}, workspace: nil)
@@ -44,23 +46,43 @@ RSpec.describe 'GitHub Action', :integration do
   end
 
   describe 'container' do
+    let(:mock_api) { MockGitHubAPI.new }
+    let(:workspace) { Dir.mktmpdir('verselicious-test') }
+
+    before do
+      system("git init #{workspace}", out: File::NULL, err: File::NULL)
+      system("git -C #{workspace} config user.email 'test@example.com'", out: File::NULL, err: File::NULL)
+      system("git -C #{workspace} config user.name 'Test'", out: File::NULL, err: File::NULL)
+      system("git -C #{workspace} commit --allow-empty -m 'init'", out: File::NULL, err: File::NULL)
+      mock_api.start
+    end
+
+    after do
+      mock_api.stop
+      FileUtils.remove_entry(workspace)
+    end
+
     it 'builds the Docker image successfully' do
       result = system("docker inspect #{image_name} > /dev/null 2>&1")
       expect(result).to be true
     end
 
-    it 'starts the entrypoint and attempts GitHub API call' do
-      output = run_action(fixture: 'pull_request_minor.json')
-      expect(output).to include('Octokit')
-    end
-
-    it 'fails with bad credentials when using a fake token' do
-      output = run_action(fixture: 'pull_request_minor.json')
-      expect(output).to include('Bad credentials')
+    it 'starts the entrypoint and reaches the API' do
+      mock_api.labels = ['minor']
+      output = run_action(
+        fixture: 'pull_request_minor.json',
+        workspace: workspace,
+        env: { 'GITHUB_API_URL' => "http://host.docker.internal:#{mock_api.port}" }
+      )
+      expect(output).to include('Bumping minor')
     end
 
     it 'rejects empty repository identifier' do
-      output = run_action(fixture: 'pull_request_minor.json', env: { 'GITHUB_REPOSITORY' => '' })
+      output = run_action(
+        fixture: 'pull_request_minor.json',
+        workspace: workspace,
+        env: { 'GITHUB_API_URL' => "http://host.docker.internal:#{mock_api.port}", 'GITHUB_REPOSITORY' => '' }
+      )
       expect(output).to include('invalid as a repository identifier')
     end
   end

@@ -17,6 +17,7 @@ class MockGitHubAPI
     @server = build_server
     mount_routes
     @thread = Thread.new { @server.start }
+    wait_for_server
   end
 
   def stop
@@ -57,6 +58,16 @@ class MockGitHubAPI
                                  html_url: 'https://github.com/test-owner/test-repo/releases/tag/mock-release'
                                })
     end
+  end
+
+  def wait_for_server
+    10.times do
+      TCPSocket.new('127.0.0.1', @port).close
+      return
+    rescue Errno::ECONNREFUSED
+      sleep 0.1
+    end
+    raise "Mock server failed to start on port #{@port}"
   end
 
   def find_available_port
