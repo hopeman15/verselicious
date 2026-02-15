@@ -1,41 +1,64 @@
 # frozen_string_literal: true
 
 RSpec.describe Verselicious::TagReader do
+  let(:prefix) { '' }
+  let(:reader) { described_class.new(prefix: prefix) }
+
+  before do
+    allow(reader).to receive(:system).with('git', 'fetch', '--force', '--tags', exception: true)
+  end
+
   describe '#latest_version' do
     context 'with existing tags' do
-      it 'returns the latest version without prefix' do
-        reader = described_class.new
-        allow(reader).to receive(:fetch_tags)
-        allow(reader).to receive(:latest_tag).and_return('1.2.3')
+      before { allow(reader).to receive(:`).and_return("1.0.0\n1.2.3\n2.0.0\n") }
 
-        expect(reader.latest_version).to eq('1.2.3')
+      it 'returns the latest version' do
+        expect(reader.latest_version).to eq('2.0.0')
       end
+    end
+
+    context 'with prefixed tags' do
+      let(:prefix) { 'v' }
+
+      before { allow(reader).to receive(:`).and_return("v1.0.0\nv1.2.3\nv2.0.0\n") }
 
       it 'strips the configured prefix' do
-        reader = described_class.new(prefix: 'v')
-        allow(reader).to receive(:fetch_tags)
-        allow(reader).to receive(:latest_tag).and_return('v1.2.3')
-
-        expect(reader.latest_version).to eq('1.2.3')
+        expect(reader.latest_version).to eq('2.0.0')
       end
     end
 
     context 'with no tags' do
+      before { allow(reader).to receive(:`).and_return('') }
+
       it 'returns 0.0.0' do
-        reader = described_class.new
-        allow(reader).to receive(:fetch_tags)
-        allow(reader).to receive(:latest_tag).and_return(nil)
-
         expect(reader.latest_version).to eq('0.0.0')
       end
+    end
 
-      it 'returns 0.0.0 for empty string' do
-        reader = described_class.new
-        allow(reader).to receive(:fetch_tags)
-        allow(reader).to receive(:latest_tag).and_return('')
+    context 'with non-semver tags' do
+      let(:prefix) { 'v' }
 
-        expect(reader.latest_version).to eq('0.0.0')
+      before { allow(reader).to receive(:`).and_return("v1.0.0\nv1.0.0-beta\nvfoo\nv2.0.0\n") }
+
+      it 'ignores non-semver tags' do
+        expect(reader.latest_version).to eq('2.0.0')
       end
+    end
+
+    context 'with mixed prefixed and unprefixed tags' do
+      let(:prefix) { 'v' }
+
+      before { allow(reader).to receive(:`).and_return("1.0.0\nv1.2.3\n3.0.0\n") }
+
+      it 'only matches tags with the correct prefix' do
+        expect(reader.latest_version).to eq('1.2.3')
+      end
+    end
+
+    it 'fetches tags before reading them' do
+      allow(reader).to receive(:`).and_return('')
+      reader.latest_version
+      expect(reader).to have_received(:system).with('git', 'fetch', '--force', '--tags', exception: true)
     end
   end
 end
