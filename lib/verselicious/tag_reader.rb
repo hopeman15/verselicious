@@ -21,7 +21,14 @@ module Verselicious
     end
 
     def latest_tag
-      `git tag --sort=version:refname`.lines.map(&:strip).reverse.find { |tag| tag.start_with?(@prefix) }
+      semver = /\A\d+\.\d+\.\d+\z/
+      `git tag --sort=version:refname`
+        .lines
+        .map(&:strip)
+        .reverse
+        .find do |tag|
+          tag.start_with?(@prefix) && semver.match?(tag.delete_prefix(@prefix))
+        end
     end
   end
 end

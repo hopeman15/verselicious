@@ -8,7 +8,7 @@ module Verselicious
   class Runner
     def initialize
       @client = Octokit::Client.new(
-        access_token: ENV.fetch('INPUT_GITHUB-TOKEN') { raise 'INPUT_GITHUB-TOKEN is not set' },
+        access_token: ENV.fetch('INPUT_GITHUB_TOKEN') { raise 'INPUT_GITHUB_TOKEN is not set' },
         api_endpoint: ENV.fetch('GITHUB_API_URL', 'https://api.github.com')
       )
       @repo = ENV.fetch('GITHUB_REPOSITORY') { raise 'GITHUB_REPOSITORY is not set' }
@@ -31,11 +31,11 @@ module Verselicious
 
     def build_config
       {
-        tag_prefix: ENV.fetch('INPUT_TAG-PREFIX', ''),
-        target_branch: ENV.fetch('INPUT_TARGET-BRANCH', 'main'),
-        generate_notes: ENV.fetch('INPUT_GENERATE-NOTES', 'true') == 'true',
+        tag_prefix: ENV.fetch('INPUT_TAG_PREFIX', ''),
+        target_branch: ENV.fetch('INPUT_TARGET_BRANCH', 'main'),
+        generate_notes: ENV.fetch('INPUT_GENERATE_NOTES', 'true') == 'true',
         label_config: %i[major minor patch].to_h do |type|
-          [type, ENV.fetch("INPUT_#{type.upcase}-LABEL", type.to_s)]
+          [type, ENV.fetch("INPUT_#{type.upcase}_LABEL", type.to_s)]
         end
       }
     end

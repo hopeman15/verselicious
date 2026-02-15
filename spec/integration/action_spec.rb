@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+require 'tmpdir'
 require_relative 'integration_helper'
 
 FIXTURES_PATH = File.expand_path('fixtures', __dir__)
@@ -22,13 +24,13 @@ RSpec.describe 'GitHub Action', :integration do
       'GITHUB_SHA' => 'abc123',
       'GITHUB_EVENT_NAME' => 'pull_request',
       'GITHUB_EVENT_PATH' => '/github/event.json',
-      'INPUT_GITHUB-TOKEN' => 'fake-token',
-      'INPUT_MAJOR-LABEL' => 'major',
-      'INPUT_MINOR-LABEL' => 'minor',
-      'INPUT_PATCH-LABEL' => 'patch',
-      'INPUT_TAG-PREFIX' => 'v',
-      'INPUT_TARGET-BRANCH' => 'main',
-      'INPUT_GENERATE-NOTES' => 'true'
+      'INPUT_GITHUB_TOKEN' => 'fake-token',
+      'INPUT_MAJOR_LABEL' => 'major',
+      'INPUT_MINOR_LABEL' => 'minor',
+      'INPUT_PATCH_LABEL' => 'patch',
+      'INPUT_TAG_PREFIX' => 'v',
+      'INPUT_TARGET_BRANCH' => 'main',
+      'INPUT_GENERATE_NOTES' => 'true'
     }.merge(env)
 
     env_flags = default_env.map { |k, v| "-e #{k.shellescape}=#{v.shellescape}" }.join(' ')
@@ -69,6 +71,8 @@ RSpec.describe 'GitHub Action', :integration do
 
     before do
       system("git init #{workspace}", out: File::NULL, err: File::NULL)
+      system("git -C #{workspace} config user.email 'test@example.com'", out: File::NULL, err: File::NULL)
+      system("git -C #{workspace} config user.name 'Test'", out: File::NULL, err: File::NULL)
       system("git -C #{workspace} commit --allow-empty -m 'init'", out: File::NULL, err: File::NULL)
       mock_api.start
     end

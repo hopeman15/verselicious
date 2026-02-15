@@ -2,6 +2,7 @@
 
 require 'webrick'
 require 'json'
+require 'socket'
 
 class MockGitHubAPI
   attr_reader :port, :release_requests

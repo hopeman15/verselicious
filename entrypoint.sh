@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -o pipefail
+set -eo pipefail
 
 cd "${GITHUB_WORKSPACE}" || exit 1
 
