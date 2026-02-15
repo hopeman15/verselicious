@@ -40,7 +40,7 @@ That's it. Label your PR with `major`, `minor`, or `patch`, merge it, and a rele
 5. Bumps the version accordingly
 6. Creates a GitHub release with the new tag and auto-generated release notes
 
-If no pull request is found or no versioning label is present, the action skips silently.
+If no pull request is found or no versioning label is present, the action logs a message and exits without creating a release.
 
 ## Inputs
 
