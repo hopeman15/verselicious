@@ -24,5 +24,5 @@ jobs:
       - name: Version Bump
         uses: ./
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          tag-prefix: 'v'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: 'v'

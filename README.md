@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: hopeman15/verselicious@v0.1.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 That's it. Label your PR with `major`, `minor`, or `patch`, merge it, and a release will be created automatically. The action detects the associated pull request from the merge commit automatically.
@@ -46,13 +46,13 @@ If no pull request is found or no versioning label is present, the action logs a
 
 | Input | Description | Required | Default |
 | --- | --- | --- | --- |
-| `github-token` | GitHub token for API access. Use a PAT if tag creation needs to trigger downstream workflows. | Yes | — |
-| `major-label` | Label name that triggers a major version bump. | No | `major` |
-| `minor-label` | Label name that triggers a minor version bump. | No | `minor` |
-| `patch-label` | Label name that triggers a patch version bump. | No | `patch` |
-| `tag-prefix` | Prefix for version tags (e.g., `v` to produce `v1.0.0`). | No | `""` |
-| `target-branch` | Branch to target for the release. | No | `main` |
-| `generate-notes` | Whether to auto-generate release notes. | No | `true` |
+| `github_token` | GitHub token for API access. Use a PAT if tag creation needs to trigger downstream workflows. | Yes | — |
+| `major_label` | Label name that triggers a major version bump. | No | `major` |
+| `minor_label` | Label name that triggers a minor version bump. | No | `minor` |
+| `patch_label` | Label name that triggers a patch version bump. | No | `patch` |
+| `tag_prefix` | Prefix for version tags (e.g., `v` to produce `v1.0.0`). | No | `""` |
+| `target_branch` | Branch to target for the release. | No | `main` |
+| `generate_notes` | Whether to auto-generate release notes. | No | `true` |
 
 ## Outputs
 
@@ -70,8 +70,8 @@ If no pull request is found or no versioning label is present, the action logs a
 ```yaml
 - uses: hopeman15/verselicious@v0
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    tag-prefix: 'v'
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    tag_prefix: 'v'
 ```
 
 This produces tags like `v1.0.0`, `v1.1.0`, etc.
@@ -81,10 +81,10 @@ This produces tags like `v1.0.0`, `v1.1.0`, etc.
 ```yaml
 - uses: hopeman15/verselicious@v0
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    major-label: 'release: major'
-    minor-label: 'release: minor'
-    patch-label: 'release: patch'
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    major_label: 'release: major'
+    minor_label: 'release: minor'
+    patch_label: 'release: patch'
 ```
 
 ### Using outputs in subsequent steps
@@ -93,7 +93,7 @@ This produces tags like `v1.0.0`, `v1.1.0`, etc.
 - uses: hopeman15/verselicious@v0
   id: version
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
 
 - run: echo "Released ${{ steps.version.outputs.tag }}"
 ```
@@ -105,5 +105,5 @@ The default `GITHUB_TOKEN` does not trigger other workflows when creating tags. 
 ```yaml
 - uses: hopeman15/verselicious@v0
   with:
-    github-token: ${{ secrets.PAT }}
+    github_token: ${{ secrets.PAT }}
 ```
