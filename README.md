@@ -1,6 +1,9 @@
-# verselicious
+# Verselicious 🍇
 
+[![Verselicious 🍇](https://github.com/hopeman15/verselicious/actions/workflows/android.yml/badge.svg)](https://github.com/hopeman15/verselicious/actions/workflows/android.yml)
+[![codecov](https://codecov.io/gh/hopeman15/verselicious/graph/badge.svg?token=BHW3H8MU7C)](https://codecov.io/gh/hopeman15/verselicious)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![License](https://img.shields.io/dub/l/vibe-d.svg)](LICENSE)
 
 GitHub Action to automate semantic versioning with labels 🏷️
 

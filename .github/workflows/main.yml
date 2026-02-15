@@ -52,6 +52,7 @@ jobs:
         uses: codecov/codecov-action@6c3b783da4e0f60ed0f99aba4c4fdd4cad7555e2 # v5.5.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit
 
   integration:
     name: Integration
@@ -66,3 +67,8 @@ jobs:
           bundler-cache: true
       - name: Integration Test
         run: make integration
+      - name: Report
+        uses: codecov/codecov-action@6c3b783da4e0f60ed0f99aba4c4fdd4cad7555e2 # v5.5.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: integration
