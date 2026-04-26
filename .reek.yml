@@ -5,6 +5,7 @@ exclude_paths:
 detectors:
   UncommunicativeVariableName:
     accept:
+      - e
       - f
   IrresponsibleModule:
     enabled: false
