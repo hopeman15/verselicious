@@ -107,3 +107,20 @@ The default `GITHUB_TOKEN` does not trigger other workflows when creating tags. 
   with:
     github_token: ${{ secrets.PAT }}
 ```
+
+## Token permissions
+
+Verselicious creates a GitHub Release, which also creates the underlying tag. Whichever token you pass via `github_token` must be allowed to write releases to the target repository. A `404 Not Found` from `POST /repos/{owner}/{repo}/releases` almost always means the token lacks those permissions — GitHub deliberately returns 404 instead of 403 to avoid leaking repository existence.
+
+Use whichever option matches your token type:
+
+- **`secrets.GITHUB_TOKEN`** — the workflow must declare `permissions: contents: write`:
+
+  ```yaml
+  permissions:
+    contents: write
+  ```
+
+- **Classic personal access token** — the token needs the `repo` scope (or `public_repo` if only public repositories are targeted).
+
+- **Fine-grained personal access token** — the token needs the **Contents: Read and write** repository permission, and the token must be granted access to the target repository.
