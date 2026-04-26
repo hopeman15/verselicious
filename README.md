@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: hopeman15/verselicious@v0.1.0
+      - uses: hopeman15/verselicious@v0.2.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
