@@ -9,7 +9,8 @@ WORKDIR /action
 
 COPY Gemfile verselicious.gemspec ./
 COPY lib/verselicious/version.rb lib/verselicious/version.rb
-RUN bundle install --without development test
+RUN bundle config set --local without 'development test' && \
+    bundle install
 
 COPY lib/ lib/
 COPY entrypoint.sh .
