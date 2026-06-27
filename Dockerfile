@@ -1,4 +1,4 @@
-FROM ruby:3.4-slim
+FROM ruby:4.0-slim
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git build-essential && \
@@ -9,7 +9,8 @@ WORKDIR /action
 
 COPY Gemfile verselicious.gemspec ./
 COPY lib/verselicious/version.rb lib/verselicious/version.rb
-RUN bundle install --without development test
+RUN bundle config set --local without 'development test' && \
+    bundle install
 
 COPY lib/ lib/
 COPY entrypoint.sh .
